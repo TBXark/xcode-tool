@@ -9,7 +9,7 @@ import Foundation
 import XcodeProj
 import PathKit
 
-struct CleanFileTool: CommandHandler {
+struct CleanFileTool: CommandService {
     
     let key: String = "clean-file"
     let help = """
@@ -31,12 +31,12 @@ struct CleanFileTool: CommandHandler {
                 xcodeproj.pbxproj.buildFiles.compactMap({ $0.file?.path}),
                 xcodeproj.pbxproj.copyFilesBuildPhases.compactMap({ $0.dstPath })
             ].flatMap({ $0 }))
-            var localFiles = [String]()
+            var localFiles = [Path]()
             for i in 1..<arguments.count {
-                localFiles.append(contentsOf: getAllFilePath(Path(arguments[i]).absolute().string))
+                localFiles.append(contentsOf: getAllFilePath(Path(arguments[i]).absolute()))
             }
             for file in localFiles {
-                if !fileNameSet.contains((file as NSString).lastPathComponent) {
+                if !fileNameSet.contains(file.lastComponent) {
                     print(file)
                 }
             }
@@ -46,28 +46,22 @@ struct CleanFileTool: CommandHandler {
         }
     }
     
-    private func getAllFilePath(_ dirPath: String) -> [String] {
-        guard let array = try? FileManager.default.contentsOfDirectory(atPath: dirPath) else {
-            return []
-        }
-        var filePaths = [String]()
-        for fileName in array {
-            var isDir: ObjCBool = true
-            let fullPath = "\(dirPath)/\(fileName)"
-            if FileManager.default.fileExists(atPath: fullPath, isDirectory: &isDir) {
-                if isDir.boolValue {
-                    if fileName.hasSuffix(".xcassets") || fileName.hasSuffix(".bundle") {
-                        filePaths.append(fullPath)
-                    } else {
-                        filePaths.append(contentsOf: getAllFilePath(fullPath))
-                    }
+    private func getAllFilePath(_ dirPath: Path) -> [Path] {
+        var paths = [Path]()
+        for sub in (try? dirPath.children()) ?? [] {
+            let name = sub.lastComponent
+            if sub.isDirectory {
+                if name.hasSuffix(".xcassets") || name.hasSuffix(".bundle") {
+                    paths.append(sub)
                 } else {
-                    if fileName != ".DS_Store" {
-                        filePaths.append(fullPath)
-                    }
+                    paths.append(contentsOf: getAllFilePath(sub))
+                }
+            } else {
+                if name != ".DS_Store" {
+                    paths.append(sub)
                 }
             }
         }
-        return filePaths
+        return paths
     }
 }

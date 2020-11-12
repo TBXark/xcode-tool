@@ -8,17 +8,14 @@ import Foundation
 import XcodeProj
 import PathKit
 
-func xctError(code: Int = 0, reason: String) -> Error {
-    return NSError(domain: "com.tbxark.xtc", code: code, userInfo: [NSLocalizedFailureReasonErrorKey: reason])
-}
-
-protocol CommandHandler {
+protocol CommandService {
     var key: String { get }
     var help: String { get }
+    init()
     func run(arguments: [String])
 }
 
-let handlers: [CommandHandler] = [VersionTool(), CleanFileTool()]
+let handlers: [CommandService] = [VersionTool(), CleanFileTool(), RenameAsset()]
 var arguments = CommandLine.arguments
 if arguments.count > 1, let handler = handlers.first(where: { $0.key == arguments[1]}) {
     arguments.removeFirst(2)

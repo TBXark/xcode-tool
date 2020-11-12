@@ -10,7 +10,7 @@ import XcodeProj
 import PathKit
 
 
-struct VersionTool: CommandHandler {
+struct VersionTool: CommandService {
     
     let key = "version"
     let help = """
