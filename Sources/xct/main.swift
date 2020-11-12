@@ -8,8 +8,8 @@ import Foundation
 import XcodeProj
 import PathKit
 
-func xtcError(code: Int = 0, reason: String) -> Error {
-    return NSError(domain: "com.tbxark.xct", code: code, userInfo: [NSLocalizedFailureReasonErrorKey: reason])
+func xctError(code: Int = 0, reason: String) -> Error {
+    return NSError(domain: "com.tbxark.xtc", code: code, userInfo: [NSLocalizedFailureReasonErrorKey: reason])
 }
 
 protocol CommandHandler {
@@ -25,6 +25,6 @@ if arguments.count > 1, let handler = handlers.first(where: { $0.key == argument
     handler.run(arguments: arguments)
 } else {
     for handler in handlers {
-        fputs("\(handler.help)\n", stderr)
+        fputs("\(handler.help)\n\n", stderr)
     }
 }

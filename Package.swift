@@ -10,7 +10,9 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(name: "XcodeProj", url: "https://github.com/tuist/xcodeproj.git", .upToNextMajor(from: "7.18.0"))
+        .package(name: "XcodeProj", url: "https://github.com/tuist/xcodeproj.git", .upToNextMajor(from: "7.18.0")),
+        .package(name: "JsonMapper", url: "https://github.com/TBXark/JsonMapper.git", .upToNextMajor(from: "1.2.0"))
+
 	],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -19,6 +21,7 @@ let package = Package(
             name: "xct",
             dependencies: [
                 .product(name: "XcodeProj", package: "XcodeProj"),
+                .product(name: "JsonMapper", package: "JsonMapper"),
             ]),
         .testTarget(
             name: "xctTests",

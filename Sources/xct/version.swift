@@ -14,11 +14,17 @@ struct VersionTool: CommandHandler {
     
     let key = "version"
     let help = """
-    usage: xct version <project> <bundle_id> <command> [version]
-        get/set project version: \(VersionData.projectVersionSet.joined(separator: ", "))
-        get/set market version: \(VersionData.marketVersionSet.joined(separator: ", "))
+    xct version <project> <bundle_id> <command> [version]
+    // example: xct version ./xctdemo.xcodeproj com.tbxark.xctdemo -p 1.2.3
+    arguments:
+        <project>: location to *.xcodeproj
+        <bundle_id>: target bundle id
+        <command>:
+            \(VersionData.projectVersionSet.joined(separator: ", ")): get/set project version:
+            \(VersionData.marketVersionSet.joined(separator: ", ")): get/set market version
+        [version]: new version string
     """
-
+    
     struct VersionData {
         static let projectVersionSet  = ["--projectVersion", "-p", "-pv"]
         static let marketVersionSet = ["--marketVersion", "-m", "-mv"]
@@ -55,11 +61,11 @@ struct VersionTool: CommandHandler {
     func run(arguments: [String]) {
         do {
             guard let command = VersionData(arguments: arguments) else {
-                throw xtcError(reason: help)
+                throw xctError(reason: help)
             }
             let projectPath = Path(command.project).absolute()
             let xcodeproj = try XcodeProj(path: projectPath)
-
+            
             if let version = command.version {
                 if version.range(of: "^[\\d\\.]*[\\d]+$", options: .regularExpression, range: nil, locale: nil) != nil {
                     for conf in xcodeproj.pbxproj.buildConfigurations {
@@ -84,7 +90,7 @@ struct VersionTool: CommandHandler {
                 }
             }
         } catch {
-            fputs("error: \(error.localizedDescription)n", stderr)
+            fputs("error: \(error.localizedDescription)\n\(help)", stderr)
             exit(1)
         }
     }
