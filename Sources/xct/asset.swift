@@ -37,14 +37,15 @@ struct RenameAsset: CommandService {
             let paths = getAllImagesetPaths(Path(arguments[0]))
             fputs("Find \(paths.count) assets in \(dir)", stdout)
             for asset in paths {
-                let jsonPath = "\(asset)/Contents.json"
-                let data = try Data(contentsOf: URL(fileURLWithPath: jsonPath))
+                let jsonPath = asset + "Contents.json"
+                
+                let data: Data = try jsonPath.read()
+                var json: String = try jsonPath.read()
                 let info = try JSONDecoder().decode(JSONElement.self, from: data)
+                
                 let assetName = asset.lastComponentWithoutExtension
-                guard var json = String(data: data, encoding: .utf8) else {
-                    continue
-                }
                 var didUpdate = false
+                
                 for image in info.images.arrayValue ?? [] {
                     guard let name = image.filename.stringValue,
                           let type = name.split(separator: ".").last else {
@@ -52,13 +53,14 @@ struct RenameAsset: CommandService {
                     }
                     let targetName = "\(assetName)\(image.scale.stringValue.map({ "@\($0)" }) ?? "").\(type)"
                     if targetName != name {
-                        try FileManager.default.moveItem(atPath: "\(asset)/\(name)", toPath: "\(asset)/\(targetName)")
+                        try (asset + name).move(asset + targetName)
                         didUpdate = true
                         json = json.replacingOccurrences(of: "\"filename\" *: *\"\(name)\"", with: "\"filename\" : \"\(targetName)\"", options: .regularExpression, range: nil)
                     }
                 }
+                
                 if didUpdate, let jsonData = json.data(using: .utf8) {
-                    try jsonData.write(to: URL(fileURLWithPath: jsonPath), options: Data.WritingOptions.atomicWrite)
+                    try jsonPath.write(jsonData)
                 }
             }
         } catch {
