@@ -15,7 +15,7 @@ protocol CommandService {
     func run(arguments: [String])
 }
 
-let handlers: [CommandService] = [VersionTool(), CleanFileTool(), RenameAsset()]
+let handlers: [CommandService] = [VersionTool(), FileCleaner(), RenameAsset(), JSONReader()]
 var arguments = CommandLine.arguments
 if arguments.count > 1, let handler = handlers.first(where: { $0.key == arguments[1]}) {
     arguments.removeFirst(2)

@@ -9,7 +9,7 @@ import Foundation
 import XcodeProj
 import PathKit
 
-struct CleanFileTool: CommandService {
+struct FileCleaner: CommandService {
     
     let key: String = "clean-file"
     let help = """
