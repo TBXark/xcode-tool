@@ -90,7 +90,7 @@ struct ReplaceHex2UIColor: CommandService {
                     do {
                         var text: String = try file.read()
                         var didChange = false
-                        while let range = text.range(of: "UIColor\\(hexString: ?\"#?[a-zA-Z0-9]{6}\" ?\\)[!?]?", options: .regularExpression, range: nil, locale: nil) {
+                        while let range = text.range(of: "UIColor\\(hexString: ?\"#?[a-fA-F0-9]{6}\" ?\\)[!?]?", options: .regularExpression, range: nil, locale: nil) {
                             if let color = hex2color(String(text[range])) {
                                 text.replaceSubrange(range, with: color)
                                 didChange = true
