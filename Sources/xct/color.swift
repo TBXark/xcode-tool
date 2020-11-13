@@ -74,7 +74,7 @@ struct Hex2UIColor: CommandService {
 struct ReplaceHex2UIColor: CommandService {
     let key: String = "replace-hex"
     let help = """
-    xct hex <location>
+    xct replace-hex <location>
     // example: xct replace-hex /xctdemo
     arguments:
         <location>: path to target directory

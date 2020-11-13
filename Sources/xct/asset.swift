@@ -62,7 +62,7 @@ struct RenameAsset: CommandService {
 struct AssetCleaner: CommandService {
     let key: String = "clean-asset"
     let help = """
-    xct clean-asset<location>
+    xct clean-asset <location>
     // example: xct clean-asset ./xctdemo/Sources
     arguments:
         <location>: path to target directory
