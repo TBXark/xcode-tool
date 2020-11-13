@@ -34,10 +34,9 @@ struct VersionTool: CommandService {
         var key: String
         var version: String?
         
-        init?(arguments: [String]) {
-            guard arguments.count >= 2,
-                  let key =  VersionData.command2Key(arguments[2]) else {
-                return nil
+        init(arguments: [String]) throws {
+            guard arguments.count >= 2, let key =  VersionData.command2Key(arguments[2]) else {
+                throw xctError(reason: "illegal parameter")
             }
             self.project = arguments[0]
             self.bundleId = arguments[1]
@@ -60,9 +59,7 @@ struct VersionTool: CommandService {
     
     func run(arguments: [String]) {
         do {
-            guard let command = VersionData(arguments: arguments) else {
-                throw xctError(reason: help)
-            }
+            let command = try VersionData(arguments: arguments)
             let projectPath = Path(command.project).absolute()
             let xcodeproj = try XcodeProj(path: projectPath)
             
