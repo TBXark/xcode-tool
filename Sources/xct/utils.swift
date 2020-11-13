@@ -30,8 +30,8 @@ struct JSONReader: CommandService {
                     json = json[keyPath: arguments[key]]
                 }
             }
-            if let v = json.rawValue {
-                fputs("\(v)", stdout)
+            if let v =  try? json.string() {
+                fputs(v, stdout)
             }
         }
         exit(0)
