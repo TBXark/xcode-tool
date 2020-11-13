@@ -56,7 +56,7 @@ struct Hex2UIColor: CommandService {
     arguments:
         <color>: hex color string
     """
-    
+
     func run(arguments: [String]) {
         guard let hex = arguments.first else {
             fputs("hex string not found\n\(help)", stderr)
@@ -67,7 +67,7 @@ struct Hex2UIColor: CommandService {
         } else {
             fputs("hex string is illegal\n\(help)", stderr)
         }
-        
+
     }
 }
 
@@ -79,7 +79,7 @@ struct ReplaceHex2UIColor: CommandService {
     arguments:
         <location>: path to target directory
     """
-    
+
     func run(arguments: [String]) {
         do {
             guard let dir = arguments.first.map({ Path($0).absolute() }) else {

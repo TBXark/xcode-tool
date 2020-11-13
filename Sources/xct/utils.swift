@@ -30,14 +30,13 @@ struct JSONReader: CommandService {
                     json = json[keyPath: arguments[key]]
                 }
             }
-            if let v =  try? json.string() {
+            if let v =  try? json.encodeToJsonString() {
                 fputs(v, stdout)
             }
         }
         exit(0)
     }
 }
-
 
 func findAllDirectoryPaths(_ dirPath: Path, suffix: String) -> [Path] {
     var paths = [Path]()
@@ -57,7 +56,6 @@ func findAllDirectoryPaths(_ dirPath: Path, suffix: String) -> [Path] {
     }
     return paths
 }
-
 
 func findAllFilePaths(_ dirPath: Path, suffix: String) -> [Path] {
     var paths = [Path]()

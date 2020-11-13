@@ -10,7 +10,7 @@ import XcodeProj
 import PathKit
 
 struct FileCleaner: CommandService {
-    
+
     let key: String = "clean-file"
     let help = """
     xct clean-file <project> <location>...
@@ -19,7 +19,7 @@ struct FileCleaner: CommandService {
         <project>: path to *.xcodeproj
         <location>...: path to target directory
     """
-    
+
     func run(arguments: [String]) {
         do {
             guard let projectPath = arguments.first.map({ Path($0).absolute() }) else {
@@ -47,7 +47,7 @@ struct FileCleaner: CommandService {
             exit(1)
         }
     }
-    
+
     private func getAllFilePath(_ dirPath: Path) -> [Path] {
         var paths = [Path]()
         for sub in (try? dirPath.children()) ?? [] {

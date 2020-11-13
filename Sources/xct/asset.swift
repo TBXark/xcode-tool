@@ -9,8 +9,6 @@ import Foundation
 import JsonMapper
 import PathKit
 
-
-
 struct RenameAsset: CommandService {
     let key: String = "rename-asset"
     let help = """
@@ -19,7 +17,7 @@ struct RenameAsset: CommandService {
     arguments:
         <location>: path to target directory
     """
-    
+
     func run(arguments: [String]) {
         do {
             guard let dir = arguments.first.map({ Path($0).absolute() }) else {
@@ -29,14 +27,14 @@ struct RenameAsset: CommandService {
             fputs("Find \(paths.count) assets in \(dir)", stdout)
             for asset in paths {
                 let jsonPath = asset + "Contents.json"
-                
+
                 let data: Data = try jsonPath.read()
                 var json: String = try jsonPath.read()
                 let info = try JSONDecoder().decode(JSONElement.self, from: data)
-                
+
                 let assetName = asset.lastComponentWithoutExtension
                 var didUpdate = false
-                
+
                 for image in info.images.arrayValue ?? [] {
                     guard let name = image.filename.stringValue,
                           let type = name.split(separator: ".").last else {
@@ -49,7 +47,7 @@ struct RenameAsset: CommandService {
                         json = json.replacingOccurrences(of: "\"filename\" *: *\"\(name)\"", with: "\"filename\" : \"\(targetName)\"", options: .regularExpression, range: nil)
                     }
                 }
-                
+
                 if didUpdate, let jsonData = json.data(using: .utf8) {
                     try jsonPath.write(jsonData)
                 }
