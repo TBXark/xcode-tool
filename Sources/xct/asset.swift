@@ -85,13 +85,14 @@ struct AssetCleaner: CommandService {
                             var find = [Path]()
                             for asset in assets[x].imageset {
                                 let name = asset.lastComponentWithoutExtension
-                                if text.contains("R.image.\(name)") || text.contains("#imageLiteral(resourceName: \"\(name)\")") {
-                                    find.append(asset)
-                                    fputs("\(file) find \(name)\n", stdout)
-                                } else if text.range(of: "UIImage[\\.init]*\\(named: *\"\(name)\"", options: .regularExpression, range: nil, locale: nil) != nil {
+                                if text.contains("R.image.\(name)") || text.contains("#imageLiteral(resourceName: \"\(name)\")") || text.contains("UIImage(named: \"\(name)\")") {
                                     find.append(asset)
                                     fputs("\(file) find \(name)\n", stdout)
                                 }
+                                // else if text.range(of: "UIImage[\\.init]*\\(named: *\"\(name)\"", options: .regularExpression, range: nil, locale: nil) != nil {
+                                //     find.append(asset)
+                                //     fputs("\(file) find \(name)\n", stdout)
+                                // }
                             }
                             for asset in find {
                                 assets[x].imageset.remove(asset)
@@ -103,11 +104,11 @@ struct AssetCleaner: CommandService {
                 }
             }
             fputs("\n\n\n\nunused imageset\n", stdout)
-            let output = assets.map({ item -> String in
+            let output = assets.map({ item -> [String] in
                 return item.imageset.map({ image -> String in
                     return "\(item.xcassets) -> \(image.lastComponentWithoutExtension)"
-                }).joined(separator: "\n")
-            }).joined()
+                })
+            }).flatMap({ $0 }).joined(separator: "\n")
             fputs(output, stdout)
         } catch {
             fputs("error: \(error.localizedDescription)\n\(help)", stderr)
