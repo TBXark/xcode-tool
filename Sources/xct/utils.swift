@@ -23,16 +23,35 @@ struct JSONReader: CommandService {
         [keyPath]: json keypath
     """
     func run(arguments: [String]) {
-        if arguments.count >= 1 {
-            var json = (try? JSONElement(rawJSON: arguments[0])) ?? JSONElement.null
-            if arguments.count >= 2 {
-                for key in 1..<arguments.count {
-                    json = json[keyPath: arguments[key]]
+        do {
+            if arguments.count >= 1 {
+                var json = try JSONElement(rawJSON: arguments[0])
+                if arguments.count >= 2 {
+                    for key in 1..<arguments.count {
+                        json = json[keyPath: arguments[key]]
+                    }
+                }
+                switch json {
+                case .bool(let v):
+                    fputs("\(v)", stdout)
+                case .int(let v):
+                    fputs("\(v)", stdout)
+                case .string(let v):
+                    fputs(v, stdout)
+                case .float(let v):
+                    fputs(String(format: "%.2f", v), stdout)
+                case .array(let v):
+                    let string = try v.string()
+                    fputs(string, stdout)
+                case .object(let v):
+                    let string = try v.string()
+                    fputs(string, stdout)
+                case .null:
+                    break
                 }
             }
-            if let v =  try? json.string() {
-                fputs(v, stdout)
-            }
+        } catch {
+            fputs(error.localizedDescription, stderr)
         }
         exit(0)
     }
