@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
     spec.homepage     = "https://github.com/TBXark/xcode-tool"
     spec.author       = { "TBXark" => "tbxark@outlook.com" }
     spec.requires_arc       = true
-    spec.source             = { :http => "https://github.com/TBXark/xcode-tool/releases/download/v#{spec.version}/rswift-v#{spec.version}.zip" }
+    spec.source             = { :http => "https://github.com/TBXark/xcode-tool/releases/download/${spec.version}/xct-v${spec.version}.zip" }
     spec.swift_version      = "5.1"
   
     spec.ios.deployment_target     = '9.0'
