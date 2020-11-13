@@ -4,9 +4,8 @@ Pod::Spec.new do |spec|
     spec.version      = "1.0.0"
     spec.license      = "MIT"
     spec.summary      = "A collection of useful tools for an xcode project"
-    spec.description  = "xct is a collection of useful gadgets for an xcode project"
     spec.homepage     = "https://github.com/TBXark/xcode-tool"
-    s.author       = { "TBXark" => "tbxark@outlook.com" }
+    spec.author       = { "TBXark" => "tbxark@outlook.com" }
     spec.requires_arc       = true
     spec.source             = { :http => "https://github.com/TBXark/xcode-tool/releases/download/v#{spec.version}/rswift-v#{spec.version}.zip" }
     spec.swift_version      = "5.1"
