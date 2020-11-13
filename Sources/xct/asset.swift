@@ -9,32 +9,23 @@ import Foundation
 import JsonMapper
 import PathKit
 
-private func getAllImagesetPaths(_ dirPath: Path) -> [Path] {
-    var paths = [Path]()
-    for sub in (try? dirPath.children()) ?? [] {
-        let name = sub.lastComponent
-        if sub.isDirectory {
-            if name.hasSuffix(".imageset"){
-                paths.append(sub)
-            } else {
-                paths.append(contentsOf: getAllImagesetPaths(sub))
-            }
-        }
-    }
-    return paths
-}
+
 
 struct RenameAsset: CommandService {
     let key: String = "rename-asset"
-    let help: String = ""
-    
+    let help = """
+    xct rename-asset <location>
+    // example: xct rename-asset ./xctdemo/Sources
+    arguments:
+        <location>: path to target directory
+    """
     
     func run(arguments: [String]) {
         do {
-            guard let dir = arguments.first else {
-                throw xctError(reason: help)
+            guard let dir = arguments.first.map({ Path($0).absolute() }) else {
+                throw xctError(reason: "target location path not found")
             }
-            let paths = getAllImagesetPaths(Path(arguments[0]))
+            let paths = findAllDirectoryPaths(dir, suffix: ".imageset")
             fputs("Find \(paths.count) assets in \(dir)", stdout)
             for asset in paths {
                 let jsonPath = asset + "Contents.json"
@@ -63,6 +54,64 @@ struct RenameAsset: CommandService {
                     try jsonPath.write(jsonData)
                 }
             }
+        } catch {
+            fputs("error: \(error.localizedDescription)\n\(help)", stderr)
+            exit(1)
+        }
+    }
+}
+
+struct AssetCleaner: CommandService {
+    let key: String = "clean-asset"
+    let help = """
+    xct clean-asset <location>
+    // example: xct clean-asset ./xctdemo/Sources
+    arguments:
+        <location>: path to target directory
+    """
+    func run(arguments: [String]) {
+        do {
+            guard let dir = arguments.first.map({ Path($0).absolute()  }) else {
+                throw xctError(reason: "target location path not found")
+            }
+            var assets = findAllDirectoryPaths(dir, suffix: ".xcassets")
+                .map({
+                    (xcassets: $0, imageset: Set(findAllDirectoryPaths($0, suffix: ".imageset")))
+                })
+            let swiftFile = findAllFilePaths(dir, suffix: ".swift").filter({ $0.lastComponent != "R.generated.swift" })
+            for file in swiftFile {
+                autoreleasepool { () -> Void in
+                    do {
+                        let text: String = try file.read()
+                        for x in 0..<assets.count {
+                            var find = [Path]()
+                            for asset in assets[x].imageset {
+                                let name = asset.lastComponentWithoutExtension
+                                if text.contains("R.image.\(name)") || text.contains("#imageLiteral(resourceName: \"\(name)\")") || text.contains("UIImage(named: \"\(name)\")") {
+                                    find.append(asset)
+                                    fputs("\(file) find \(name)\n", stdout)
+                                }
+                                // else if text.range(of: "UIImage[\\.init]*\\(named: *\"\(name)\"", options: .regularExpression, range: nil, locale: nil) != nil {
+                                //     find.append(asset)
+                                //     fputs("\(file) find \(name)\n", stdout)
+                                // }
+                            }
+                            for asset in find {
+                                assets[x].imageset.remove(asset)
+                            }
+                        }
+                    } catch {
+                        fputs("\(error.localizedDescription)\n", stderr)
+                    }
+                }
+            }
+            fputs("\n\n\n\nunused imageset\n", stdout)
+            let output = assets.map({ item -> [String] in
+                return item.imageset.map({ image -> String in
+                    return "\(item.xcassets) -> \(image.lastComponentWithoutExtension)"
+                })
+            }).flatMap({ $0 }).joined(separator: "\n")
+            fputs(output, stdout)
         } catch {
             fputs("error: \(error.localizedDescription)\n\(help)", stderr)
             exit(1)

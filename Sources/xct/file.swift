@@ -22,10 +22,12 @@ struct FileCleaner: CommandService {
     
     func run(arguments: [String]) {
         do {
-            guard arguments.count >= 2 else {
-                throw xctError(reason: help)
+            guard let projectPath = arguments.first.map({ Path($0).absolute() }) else {
+                throw xctError(reason: "project path not found")
             }
-            let projectPath = Path(arguments[0]).absolute()
+            guard arguments.count > 1 else {
+                throw xctError(reason: "target location path not found")
+            }
             let xcodeproj = try XcodeProj(path: projectPath)
             let fileNameSet = Set([
                 xcodeproj.pbxproj.buildFiles.compactMap({ $0.file?.path}),
