@@ -57,7 +57,6 @@ struct JSONReader: CommandService {
     }
 }
 
-
 func findAllDirectoryPaths(_ dirPath: Path, suffix: String) -> [Path] {
     var paths = [Path]()
     do {
@@ -76,7 +75,6 @@ func findAllDirectoryPaths(_ dirPath: Path, suffix: String) -> [Path] {
     }
     return paths
 }
-
 
 func findAllFilePaths(_ dirPath: Path, suffix: String) -> [Path] {
     var paths = [Path]()

@@ -9,9 +9,8 @@ import Foundation
 import XcodeProj
 import PathKit
 
-
 struct VersionTool: CommandService {
-    
+
     let key = "version"
     let help = """
     xct version <project> <bundle_id> <command> [version]
@@ -24,16 +23,16 @@ struct VersionTool: CommandService {
             \(VersionData.marketVersionSet.joined(separator: ", ")): get/set market version
         [version]: new version string
     """
-    
+
     struct VersionData {
         static let projectVersionSet  = ["--projectVersion", "-p", "-pv"]
         static let marketVersionSet = ["--marketVersion", "-m", "-mv"]
-        
+
         var project: String
         var bundleId: String
         var key: String
         var version: String?
-        
+
         init(arguments: [String]) throws {
             guard arguments.count >= 2, let key =  VersionData.command2Key(arguments[2]) else {
                 throw xctError(reason: "illegal parameter")
@@ -43,26 +42,25 @@ struct VersionTool: CommandService {
             self.key = key
             self.version = arguments.count > 3 ? arguments[3] : nil
         }
-        
+
         init(project: String, bundleId: String, key: String, version: String?) {
             self.project = project
             self.bundleId = bundleId
             self.key = key
             self.version = version
         }
-        
+
         static private func command2Key(_ value: String) -> String? {
             return projectVersionSet.contains(value) ? "CURRENT_PROJECT_VERSION" : (marketVersionSet.contains(value) ? "MARKETING_VERSION": nil)
         }
     }
-    
-    
+
     func run(arguments: [String]) {
         do {
             let command = try VersionData(arguments: arguments)
             let projectPath = Path(command.project).absolute()
             let xcodeproj = try XcodeProj(path: projectPath)
-            
+
             if let version = command.version {
                 if version.range(of: "^[\\d\\.]*[\\d]+$", options: .regularExpression, range: nil, locale: nil) != nil {
                     for conf in xcodeproj.pbxproj.buildConfigurations {
@@ -92,4 +90,3 @@ struct VersionTool: CommandService {
         }
     }
 }
-
