@@ -33,18 +33,18 @@ struct JSONReader: CommandService {
                 }
                 switch json {
                 case .bool(let v):
-                    fputs("\(v)", stdout)
+                    fputs(v.description, stdout)
                 case .int(let v):
-                    fputs("\(v)", stdout)
+                    fputs(v.description, stdout)
                 case .string(let v):
                     fputs(v, stdout)
-                case .float(let v):
-                    fputs(String(format: "%.2f", v), stdout)
+                case .decimal(let v):
+                    fputs(v.description, stdout)
                 case .array(let v):
-                    let string = try v.string()
+                    let string = try v.encodeToJsonString()
                     fputs(string, stdout)
                 case .object(let v):
-                    let string = try v.string()
+                    let string = try v.encodeToJsonString()
                     fputs(string, stdout)
                 case .null:
                     break
