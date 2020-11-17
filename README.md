@@ -3,7 +3,7 @@ A collection of useful tools for an xcode project
 
 
 
-####  xct version
+###  xct version
 
 > 用于读写 `.xcodeproj` 中的 `project version` `market version`
 
@@ -21,7 +21,7 @@ arguments:
 ```
 
 
-#### xct clean-file
+### xct clean-file
 
 > 列出未被`.xcodeproj`引用的文件
 
