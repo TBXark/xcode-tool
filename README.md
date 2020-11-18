@@ -15,9 +15,8 @@ You can skip this step if you already have Homebrew installed.
 
 Now install xct itself:
 ```shell
-brew tap tbxark/repo && brew install xcode-tool
+brew install tbxark/repo/xcode-tool
 ```
-
 
 
 ###  xct version
