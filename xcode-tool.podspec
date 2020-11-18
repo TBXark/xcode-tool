@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
     spec.name         = "xcode-tool"
-    spec.version      = "1.0.0"
+    spec.version      = "1.0.1"
     spec.license      = "LICENSE"
     spec.summary      = "A collection of useful tools for an xcode project"
     spec.homepage     = "https://github.com/TBXark/xcode-tool"
