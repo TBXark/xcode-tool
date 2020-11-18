@@ -1,6 +1,20 @@
 # xct
 A collection of useful tools for an xcode project
 
+Homebrew (macOS only)
+
+Install Homebrew:
+
+You can skip this step if you already have Homebrew installed.
+```shell
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+Now install xct itself:
+```shell
+brew tap tbxark/repo && brew install xcode-tool
+```
+
 
 
 ###  xct version
