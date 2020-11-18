@@ -1,7 +1,10 @@
 # xct
 A collection of useful tools for an xcode project
 
-Homebrew (macOS only)
+
+## Installation
+
+### Homebrew (macOS only)
 
 Install Homebrew:
 
