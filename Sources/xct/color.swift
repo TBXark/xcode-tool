@@ -85,13 +85,14 @@ struct ReplaceHex2UIColor: CommandService {
             guard let dir = arguments.first.map({ Path($0).absolute() }) else {
                 throw xctError(reason: "project path not found")
             }
-            for file in findAllDirectoryPaths(dir, suffix: ".swift") {
+            for file in findAllFilePaths(dir, suffix: ".swift") {
                 autoreleasepool { () -> Void in
                     do {
                         var text: String = try file.read()
                         var didChange = false
-                        while let range = text.range(of: "UIColor\\(hexString: ?\"#?[a-fA-F0-9]{6}\" ?\\)[!?]?", options: .regularExpression, range: nil, locale: nil) {
-                            if let color = hex2color(String(text[range])) {
+                        while let range = text.range(of: "UIColor\\(hexString: ?\"#?[a-fA-F0-9]{3,6}\" ?\\)[!?]?", options: .regularExpression, range: nil, locale: nil),
+                              let hexRange = text.range(of: "#?[a-fA-F0-9]{3,6}", options: .regularExpression, range: range, locale: nil) {
+                            if let color = hex2color(String(text[hexRange])) {
                                 text.replaceSubrange(range, with: color)
                                 didChange = true
                             } else {
