@@ -1,6 +1,12 @@
 # xct
 A collection of useful tools for an xcode project
 
+## Build
+
+```shell
+swift build --arch arm64 --arch x86_64 -c release
+```
+
 
 ## Installation
 

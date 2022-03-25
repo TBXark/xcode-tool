@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug xct",
+            "program": "${workspaceFolder:xcode-tool}/.build/debug/xct",
+            "args": [],
+            "cwd": "${workspaceFolder:xcode-tool}",
+            "preLaunchTask": "swift: Build Debug xct"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Release xct",
+            "program": "${workspaceFolder:xcode-tool}/.build/release/xct",
+            "args": [],
+            "cwd": "${workspaceFolder:xcode-tool}",
+            "preLaunchTask": "swift: Build Release xct"
+        }
+    ]
+}
