@@ -24,6 +24,16 @@ Now install xct itself:
 brew install --build-from-source tbxark/repo/xcode-tool
 ```
 
+### Cocoapods
+
+```shell
+pod 'xcode-tool', '~> 1.0.3'
+```
+
+
+
+## Usage
+
 
 ###  xct version
 
