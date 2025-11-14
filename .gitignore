@@ -3,3 +3,23 @@
 /Packages
 /*.xcodeproj
 xcuserdata/
+
+# Go binaries
+xct
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go test binary
+*.test
+
+# Go coverage
+*.out
+
+# Go workspace
+go.work
+
+# Vendor
+vendor/

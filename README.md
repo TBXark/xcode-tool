@@ -1,134 +1,56 @@
-# xct
-A collection of useful tools for an xcode project
+# xcode-tool
 
-## Build
-
-```shell
-swift build --arch arm64 --arch x86_64 -c release
-```
-
-
-## Installation
-
-### Homebrew (macOS only)
-
-Install Homebrew:
-
-You can skip this step if you already have Homebrew installed.
-```shell
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-```
-
-Now install xct itself:
-```shell
-brew install --build-from-source tbxark/repo/xcode-tool
-```
-
-### Cocoapods
-
-```shell
-pod 'xcode-tool', '~> 1.0.3'
-```
-
-
+A command line tool for managing Xcode projects, including asset management and color conversion.
 
 ## Usage
 
+### Build
 
-###  xct version
-
-> 用于读写 `.xcodeproj` 中的 `project version` `market version`
-
-example: `xct version ./xctdemo.xcodeproj com.tbxark.xctdemo -p 1.2.3`
-
-```shell
-xct version <project> <bundle_id> <command> [version]
-arguments:
-    <project>: location to *.xcodeproj
-    <bundle_id>: target bundle id
-    <command>:
-        --projectVersion, -p, -pv: get/set project version:
-        --marketVersion, -m, -mv: get/set market version
-    [version]: new version string
+```sh
+make build
 ```
 
+### Install
 
-### xct clean-file
-
-> 列出未被`.xcodeproj`引用的文件
-
-example: `xct clean-file ./xctdemo.xcodeproj /Sources /Tests`
-
-```shell
-xct clean-file <project> <location>...
-arguments:
-    <project>: path to *.xcodeproj
-    <location>...: path to target directory
-
+```sh
+go install github.com/TBXark/xcode-tool/cmd/xct@latest
 ```
 
+### CLI
 
-### xct rename-asset
+#### Rename Assets
 
-> 将asset中的文件名设置成和文件夹相同
+Rename asset files in `.imageset` directories to match the asset name.
 
-example: `xct rename-asset ./xctdemo/Sources`
-
-```shell
-xct rename-asset <location>
-arguments:
-    <location>: path to target directory
+```sh
+xct rename-asset ./path/to/project/Assets.xcassets
 ```
 
+#### Clean Assets
 
-### xct clean-asset
+Find and report unused image assets by scanning Swift files.
 
-> 列出未被代码引用的asset
-
-example: `xct clean-asset ./xctdemo/Sources`
-
-```shell
-xct clean-asset <location>
-arguments:
-    <location>: path to target directory
+```sh
+xct clean-asset ./path/to/project/Sources
 ```
 
+#### Convert Hex Color
 
-### xct json
+Convert a hex color string to UIColor format.
 
-> 根据keypath读取json
-
-example: `xct json '{"data": { "version": 1}}' 'data.version'`
-
-```shell
-xct json <json-string> [keypath]...
-arguments:
-    <json-string>: The json string to be parsed
-    [keyPath]: json keypath
+```sh
+xct hex 232323
+xct hex #FF5733
 ```
 
+#### Replace Hex Colors
 
-### xct hex
+Replace `UIColor(hexString:)` calls with `UIColor(red:green:blue:alpha:)` in Swift files.
 
-> 将hex转换成UIColor
-
-example: `xct hex #232323`
-
-```shell
-xct hex <color>
-arguments:
-    <color>: hex color string
+```sh
+xct replace-hex ./path/to/project
 ```
 
+## License
 
-### xct replace-hex
-
-> 将代码中的hex相关代码转换成普通的UIColor初始化函数
-
-example: `xct replace-hex /xctdemo`
-
-```shell
-xct replace-hex <location>
-arguments:
-    <location>: path to target directory
-```
+**xcode-tool** is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more details.
