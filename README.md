@@ -40,7 +40,7 @@ Convert a hex color string to UIColor format.
 
 ```sh
 xct hex 232323
-xct hex #FF5733
+xct hex '#FF5733'
 ```
 
 #### Replace Hex Colors
